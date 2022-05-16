@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CandidatesController;
 use App\Http\Controllers\candidateUsersController;
 use App\Http\Controllers\PublishJobsController;
 use Illuminate\Http\Request;
@@ -32,6 +33,11 @@ Route::post('/publish-jobs', [PublishJobsController::class, 'store']);
 Route::post('/apply-jobs', [PublishJobsController::class, 'applyJobs']);
 Route::get('/get-job/{id}', [PublishJobsController::class, 'getJobById']);
 
-Route::get('/candidate', [candidateUsersController::class, 'index']);
+Route::post('/login-candidate', [candidateUsersController::class, 'login']);
 Route::post('/register-candidate', [candidateUsersController::class, 'registerCandidate']);
+Route::get('/logout-candidate', [candidateUsersController::class, 'logout']);
+
+Route::get('/candidates', [CandidatesController::class, 'index']);
+Route::post('/record-candidate', [CandidatesController::class, 'registerCandidate']);
+Route::put('/update-candidate', [CandidatesController::class, 'updateCandidate']);
 

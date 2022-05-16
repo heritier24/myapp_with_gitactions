@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 
 class PublishJobsController extends Controller
 {
+
+    // list all jobs
     public function index(){
         $jobs = jobs::all(['job_title', 'job_type', 'job_description', 'job_location',
         'company_name']);
@@ -18,6 +20,7 @@ class PublishJobsController extends Controller
         ];
         return response()->json($response, Response::HTTP_OK);
     }
+    // publish jobs
     public function store(Request $request){
         $validation = Validator::make($request->all(), [
             "jobtitle" => "required",
@@ -27,9 +30,9 @@ class PublishJobsController extends Controller
             "companyname"=>"required"
         ]);
 
-        // if ($validation->fails()) {
-        //     return response()->json(["errors" => $validation->errors()->all()], Response::HTTP_UNPROCESSABLE_ENTITY);
-        // }
+        if ($validation->fails()) {
+            return response()->json(["errors" => $validation->errors()->all()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
         jobs::create([
             'job_title' => $request->jobtitle,
             'job_type' => $request->jobtype,
@@ -43,7 +46,27 @@ class PublishJobsController extends Controller
         ];
         return response()->json($response, 201);
     }
-    public function applyJobs(){
-        
+    // applying for a job
+    public function applyJobs(Request $request, $jobsid){
+        $validation = Validator::make($request->all(), [
+            "candidateid" => "required",
+            "date_applied" => "required",
+            "status"=> "required"
+        ]);
+
+        if ($validation->fails()) {
+            return response()->json(["errors" => $validation->errors()->all()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+        jobs::create([
+            'candidateid' => $request->candidateid,
+            'jobid' => $jobsid,
+            'date_applied' => $request->date_applied,
+            "status" => $request->status
+        ]);
+
+        $response = [
+            'applying jobs created successfully'
+        ];
+        return response()->json($response, 201);
     }
 }

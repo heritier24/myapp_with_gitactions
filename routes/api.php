@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\applyJobsController;
 use App\Http\Controllers\CandidatesController;
 use App\Http\Controllers\candidateUsersController;
 use App\Http\Controllers\PublishJobsController;
@@ -40,4 +41,3 @@ Route::get('/logout-candidate', [candidateUsersController::class, 'logout']);
 Route::get('/candidates', [CandidatesController::class, 'index']);
 Route::post('/record-candidate', [CandidatesController::class, 'registerCandidate']);
 Route::put('/update-candidate', [CandidatesController::class, 'updateCandidate']);
-

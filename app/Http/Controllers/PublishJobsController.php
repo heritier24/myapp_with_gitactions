@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\applyjob;
 use App\Models\jobs;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class PublishJobsController extends Controller
@@ -57,7 +59,7 @@ class PublishJobsController extends Controller
         if ($validation->fails()) {
             return response()->json(["errors" => $validation->errors()->all()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
-        jobs::create([
+        applyjob::create([
             'candidateid' => $request->candidateid,
             'jobid' => $jobsid,
             'date_applied' => $request->date_applied,
@@ -68,5 +70,12 @@ class PublishJobsController extends Controller
             'applying jobs created successfully'
         ];
         return response()->json($response, 201);
+    }
+
+    // view applied for a jobs 
+    public function applied(){
+        // $applied = DB::select('SELECT candidates.candidate_names,jobs.job_title,jobs.companyname,
+        //                        applyjobs.date_applied,applyjobs.status FROM applyjobs
+        //                        INNER JOIN jobs ON ');
     }
 }

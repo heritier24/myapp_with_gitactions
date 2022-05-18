@@ -22,6 +22,10 @@ return new class extends Migration
             $table->string('nationalid');
             $table->string('cv');
             $table->timestamps();
+
+            $table->foreign('candidate_userid')->references('id')->on('candidateusers')
+            ->onDelete('restrict')
+            ->onUpdate('cascade');
         });
     }
 

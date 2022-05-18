@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->integer('applied_id');  // foreign key applyjobs
             $table->date('date_selected');
-            $table->string('status');
+            $table->string('status');  // aproved 
             $table->timestamps();
         });
     }

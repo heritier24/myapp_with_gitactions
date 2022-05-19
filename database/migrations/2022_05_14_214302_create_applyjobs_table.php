@@ -15,10 +15,13 @@ return new class extends Migration
     {
         Schema::create('applyjobs', function (Blueprint $table) {
             $table->id();
-            $table->integer('candidateid');  // foreign key candidate id 
-            $table->integer('jobid');  // foreign key 
+            // foreign key candidate id 
+            $table->bigInteger('candidateid')->unsigned();
+            $table->foreign('candidateid')->references('id')->on('candidates')->onUpdte('cascade')->onDelete('cascade');
+            $table->bigInteger('jobid')->unsigned();  // foreign key 
+            $table->foreign('jobid')->references('id')->on('jobs')->onUpdte('cascade')->onDelete('cascade');
             $table->date('date_applied');
-            $table->string('status');  // pending , Selected , Cancelled
+            $table->string('status')->default('Pending');  // pending , Selected , Cancelled
             $table->timestamps();
         });
     }

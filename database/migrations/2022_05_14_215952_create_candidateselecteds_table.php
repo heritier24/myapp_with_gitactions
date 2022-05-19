@@ -15,7 +15,8 @@ return new class extends Migration
     {
         Schema::create('candidateselecteds', function (Blueprint $table) {
             $table->id();
-            $table->integer('applied_id');  // foreign key applyjobs
+            $table->bigInteger('applied_id')->unsigned();  // foreign key applyjobs
+            $table->foreign('applied_id')->references('id')->on('applyjobs')->onUpdte('cascade')->onDelete('restrict');
             $table->date('date_selected');
             $table->string('status');  // aproved 
             $table->timestamps();

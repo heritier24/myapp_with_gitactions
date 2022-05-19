@@ -25,9 +25,7 @@ class CandidatesController extends Controller
     {
         $validation = Validator::make($request->all(), [
             "candidate_userid" => "required",
-            "candidate_names" => "required",
             "phonenumber" => "required",
-            "email" => "required",
             "nationalid" => "required",
             "cv" => "required"
         ]);
@@ -35,15 +33,13 @@ class CandidatesController extends Controller
             return response()->json(["errors" => $validation->errors()->all()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $candidateid = candidates::find($request->candidate_userid);
-        if ($candidateid === null) {
-            return response()->json(['error' => ["create user account first to register the document "]], Response::HTTP_NOT_FOUND);
-        }
+        // $candidateid = candidates::find($request->candidate_userid);
+        // if ($candidateid === null) {
+        //     return response()->json(['error' => ["create user account first to register the document "]], Response::HTTP_NOT_FOUND);
+        // }
         candidates::create([
             'candidate_userid' => $request->candidate_userid,
-            'candidate_names' => $request->candidate_names,
-            'phonenumber' => $request->phonenumber,
-            "email" => $request->email,
+            'candidate_phonenumber' => $request->phonenumber,
             "nationalid" => $request->nationalid,
             "cv" => $request->cv
         ]);

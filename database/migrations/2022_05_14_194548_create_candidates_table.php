@@ -15,17 +15,15 @@ return new class extends Migration
     {
         Schema::create('candidates', function (Blueprint $table) {
             $table->id();
-            $table->integer('candidate_userid');  // candidate user id 
-            $table->string('candidate_names');
+            $table->bigInteger('candidate_userid')->unsigned();  // candidate user id 
+            $table->foreign('candidate_userid')->references('id')->on('candidateusers')->onUpdte('cascade')->onDelete('restrict');
+            // $table->string('candidate_names');
             $table->string('candidate_phonenumber');
-            $table->string('candidate_email');
+            // $table->string('candidate_email');
             $table->string('nationalid');
             $table->string('cv');
             $table->timestamps();
 
-            $table->foreign('candidate_userid')->references('id')->on('candidateusers')
-            ->onDelete('restrict')
-            ->onUpdate('cascade');
         });
     }
 

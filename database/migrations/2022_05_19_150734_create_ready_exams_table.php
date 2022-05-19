@@ -13,14 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('jobs', function (Blueprint $table) {
+        Schema::create('ready_exams', function (Blueprint $table) {
             $table->id();
-            $table->string('job_title');
-            $table->string('job_type');
-            $table->string('job_description');
-            $table->string('job_location');
-            $table->string('company_name');
-            $table->string('exam_status')->default('On to dos list');
+            $table->bigInteger('job_id')->unsigned();
+            $table->foreign('job_id')->references('id')->on('jobs')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('start_at');
+            $table->string('end_at');
             $table->timestamps();
         });
     }
@@ -32,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jobs');
+        Schema::dropIfExists('ready_exams');
     }
 };

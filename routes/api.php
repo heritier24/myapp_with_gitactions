@@ -62,4 +62,5 @@ Route::post('/set-exam-period',[ExamsController::class,'setExamPeriod']);
 Route:: post('get-application-result',[ApplicantResultsController::class,'getApplicationResults']);
 Route::post('/get-exam-to-do',[ApplicantResultsController::class, 'getExamTodo']);
 Route::post('do-exam/{id}',[ApplicantResultsController::class, 'doExam']);
-Route::post('/submit-answer',[ApplicantResultsController::class, 'submitSxamResults']);
+Route::post('/submit-answer',[ApplicantResultsController::class, 'submitExamResults']);
+Route::post('/get-gooten-result',[ApplicantResultsController::class, 'getResultsOfAnswers']);

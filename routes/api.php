@@ -55,7 +55,7 @@ Route::get('/get-exam/{id}',[ExamsController::class, 'getExamForEdit']);
 Route::get('/get-indivi-questions/{id}',[ExamsController::class, 'getindividualquestion']);
 Route::put('/update-question',[ExamsController::class, 'confirmExamQuestionUpdation']);
 Route::delete('/delete-question/{id}',[ExamsController::class, 'deleteSpecificQuestion']);
-Route::put('/mark-exam-expired/{id}',[ExamsController::class,'markExamAsExpired']);
+Route::put('/mark-job-expired/{id}',[ExamsController::class, 'markJobAsExpired']);
 Route::post('/set-exam-period',[ExamsController::class,'setExamPeriod']);
 
 // Candididate results 
@@ -63,4 +63,4 @@ Route:: post('get-application-result',[ApplicantResultsController::class,'getApp
 Route::post('/get-exam-to-do',[ApplicantResultsController::class, 'getExamTodo']);
 Route::post('do-exam/{id}',[ApplicantResultsController::class, 'doExam']);
 Route::post('/submit-answer',[ApplicantResultsController::class, 'submitExamResults']);
-Route::post('/get-gooten-result',[ApplicantResultsController::class, 'getResultsOfAnswers']);
+Route::post('/get-gooten-result/{id}',[ApplicantResultsController::class, 'getResultsOfAnswers']);

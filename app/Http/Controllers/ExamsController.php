@@ -8,6 +8,7 @@ use Illuminate\Http\Response;
 use App\Models\Exams;
 use Illuminate\Support\Facades\DB;
 use App\Models\ReadyExam;
+use App\Models\jobs;
 
 class ExamsController extends Controller
 {
@@ -121,8 +122,15 @@ class ExamsController extends Controller
         ], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function markExamAsExpired($jobPosted)
+    public function markJobAsExpired($jobPosted)
     {
+        jobs::where('id', $jobPosted)->update([
+            "exam_status" => 'Period expired',
+        ]);
+        return response()->json([
+            'status' => 201,
+            'result' => "Job post expiration setted successfully"
+        ]);
     }
 
     public function setExamPeriod(Request $request)

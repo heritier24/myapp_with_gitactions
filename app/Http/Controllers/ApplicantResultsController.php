@@ -40,10 +40,11 @@ class ApplicantResultsController extends Controller
             ->join('candidates', 'candidates.id', 'applyjobs.candidateid')
             ->join('candidateusers', 'candidateusers.id', 'candidates.candidate_userid')
             ->select('applyjobs.id', 'applyjobs.status', 'candidateusers.name', 'candidateusers.email', 'candidates.candidate_phonenumber', 'candidates.nationalid', 'jobs.job_title', 'jobs.job_type', 'jobs.company_name')
-            ->where('jobs.id', $request->user_id)
+            ->where('applyjobs.candidateid', $request->user_id)
             ->where('applyjobs.status', 'Short listed')
             ->where('jobs.exam_status', 'On to dos list')
             ->get();
+
 
         return response()->json([
             'status' => 201,
@@ -58,9 +59,24 @@ class ApplicantResultsController extends Controller
             ->where('jobs.id', $job_id)
             ->get();
 
+        $veify_previous_solutions = DB::table('candidates_answers')
+            ->join('candidates', 'candidates.id', 'candidates_answers.candidate_id')
+            ->join('exams', 'exams.id', 'candidates_answers.question_id')
+            ->join('jobs', 'jobs.id', 'exams.job_id')
+            ->join('candidateusers', 'candidateusers.id', 'candidates.candidate_userid')
+            ->where('jobs.id', $job_id)
+            ->where('candidates_answers.candidate_id', $request->candidate_id)
+            ->count();
+
+        if ($veify_previous_solutions > 0) {
+            return response()->json([
+                'status' => 201,
+                'result' => 'You had already attend the exam, Please view your results instead',
+            ]);
+        }
         return response()->json([
             'status' => 201,
-            'result' => $doExam
+            'result' => $doExam,
         ]);
     }
 
@@ -80,16 +96,16 @@ class ApplicantResultsController extends Controller
             foreach ($question_list as $results) {
                 if ($answers['answer'] === $results->answer) {
                     CandidatesAnswers::create([
-                        'question_id'=> $answers['question_id'],
-                        'candidate_id'=> $candidate_id,
-                        'candidate_answer'=> $answers['answer'],
-                        'marks'=> $results->mark_precized,
-                        'answer_status'=>true
+                        'question_id' => $answers['question_id'],
+                        'candidate_id' => $candidate_id,
+                        'candidate_answer' => $answers['answer'],
+                        'marks' => $results->mark_precized,
+                        'answer_status' => true
                     ]);
                     return response()->json([
                         'status' => 201,
                         'result' => "The answers submited well, check the result now.",
-                       
+
                     ]);
                 }
                 CandidatesAnswers::create([
@@ -102,34 +118,39 @@ class ApplicantResultsController extends Controller
                 return response()->json([
                     'status' => 201,
                     'result' => "The answers submited well, check the result now.",
-                    
+
                 ]);
             }
         }
     }
 
     // Get results of sumitted ansewers
-    public function getResultsOfAnswers(Request $request){
+    public function getResultsOfAnswers(Request $request, $job_id)
+    {
         $gotten_results = DB::table('candidates_answers')
-        ->join('exams', 'exams.id', 'candidates_answers.question_id')
-        ->join('candidates', 'candidates.id', 'candidates_answers.candidate_id')
-        ->join('applyjobs', 'applyjobs.candidateid', 'candidates.id')
-        ->join('jobs', 'jobs.id', 'applyjobs.jobid')
-        ->join('candidateusers', 'candidateusers.id', 'candidates.candidate_userid')
-        ->select('candidates_answers.candidate_id', 'candidateusers.name', 'jobs.job_title', 'jobs.job_type')
-        ->where('candidates.id',$request->cand_id)
-        ->first();
+            ->join('exams', 'exams.id', 'candidates_answers.question_id')
+            ->join('candidates', 'candidates.id', 'candidates_answers.candidate_id')
+            ->join('applyjobs', 'applyjobs.candidateid', 'candidates.id')
+            ->join('jobs', 'jobs.id', 'applyjobs.jobid')
+            ->join('candidateusers', 'candidateusers.id', 'candidates.candidate_userid')
+            ->select('candidates_answers.candidate_id', 'candidateusers.name', 'jobs.job_title', 'jobs.job_type')
+            ->where('candidateusers.id', $request->cand_id)
+            ->where('jobs.id', $job_id)
+            ->first();
 
         // foreach($gotten_results as $results){
-            $real_cand_id = $gotten_results->candidate_id;
+        $real_cand_id = $gotten_results->candidate_id;
         // }
-        $tota_gotten_marks = DB::table('candidates_answers')          
+        $tota_gotten_marks = DB::table('candidates_answers')
+            ->join('exams', 'exams.id', 'candidates_answers.question_id')
+            ->join('jobs', 'jobs.id', 'exams.job_id')
             ->where('candidate_id', $real_cand_id)
+            ->where('jobs.id', $job_id)
             ->sum('marks');
         return response()->json([
-            'status'=>201,
-            'result'=> $gotten_results,
-            'marks'=> $tota_gotten_marks
+            'status' => 201,
+            'result' => $gotten_results,
+            'marks' => $tota_gotten_marks
 
         ]);
     }

@@ -30,10 +30,10 @@ class AuthenticationController extends Controller
             'password' => Hash::make($request->password),
             'email' => $request->email
         ]);
-        $token = $user->createToken('token')->plainTextToken;
+        // $token = $user->createToken('token')->plainTextToken;
 
         return \response()->json([
-            "token" => $token,
+            "user_id" => $user->id,
         ]);
     }
     public function signin(Request $request)
@@ -56,18 +56,18 @@ class AuthenticationController extends Controller
             return \response()->json(["errors" => ["Invalid credentials"]], Response::HTTP_FORBIDDEN);
         }
 
-        Auth::attempt([
-            "email" => $request->email,
-            "password" => $request->password
-        ]);
+        // Auth::attempt([
+        //     "email" => $request->email,
+        //     "password" => $request->password
+        // ]);
 
-        Auth::user()->tokens()->delete();
+        // Auth::user()->tokens()->delete();
 
-        $id = Auth::id();
-        $token = Auth::user()->createToken('token')->plainTextToken;
+        // $id = Auth::id();
+        // $token = Auth::user()->createToken('token')->plainTextToken;
 
         return \response()->json([
-            "token" => $token,
+            "user_id" => $user->id,
         ]);
     }
     public function logout()

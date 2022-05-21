@@ -21,9 +21,9 @@ class AuthenticationController extends Controller
             "password" => "required|string|min:6|confirmed"
         ]);
 
-        if ($validation->fails()) {
-            return response()->json(["errors" => $validation->errors()->all()], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        // if ($validation->fails()) {
+        //     return response()->json(["errors" => $validation->errors()->all()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        // }
 
         $user = User::create([
             'name' => $request->name,
@@ -43,9 +43,9 @@ class AuthenticationController extends Controller
             "password" => "required|string|min:6"
         ]);
 
-        if ($validation->fails()) {
-            return response()->json(["errors" => $validation->errors()->all()], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        // if ($validation->fails()) {
+        //     return response()->json(["errors" => $validation->errors()->all()], Response::HTTP_UNPROCESSABLE_ENTITY);
+        // }
 
         $user = User::where("email", $request->email)->first();
 

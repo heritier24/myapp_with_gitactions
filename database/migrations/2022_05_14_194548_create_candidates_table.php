@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('candidate_userid')->unsigned();  // candidate user id 
             $table->foreign('candidate_userid')->references('id')->on('candidateusers')->onUpdte('cascade')->onDelete('restrict');
-            // $table->string('candidate_names');
+            $table->string('candidate_names');
             $table->string('candidate_phonenumber');
-            // $table->string('candidate_email');
+            $table->string('candidate_email');
             $table->string('nationalid');
             $table->string('cv');
             $table->timestamps();

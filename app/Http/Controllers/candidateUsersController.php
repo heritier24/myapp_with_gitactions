@@ -14,7 +14,8 @@ class candidateUsersController extends Controller
 {
 
     // register users 
-    public function registerCandidate(Request $request){
+    public function registerCandidate(Request $request)
+    {
         $validation = Validator::make($request->all(), [
             "name" => "required",
             "email" => "required|email:rfc,dns",
@@ -30,14 +31,14 @@ class candidateUsersController extends Controller
             'password' => Hash::make($request->password),
             'email' => $request->email
         ]);
-        $token = $user->createToken('token')->plainTextToken;
 
         return \response()->json([
-            "token" => $token,
+            "userid" => $user->id,
         ]);
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $validation = Validator::make($request->all(), [
             "email" => "required|email:rfc,dns",
             "password" => "required|string|min:6"
@@ -55,22 +56,24 @@ class candidateUsersController extends Controller
         if (!Hash::check($request->password, $user->password)) {
             return \response()->json(["errors" => ["Invalid credentials"]], Response::HTTP_FORBIDDEN);
         }
+        // $user::attempt([
+        //     "email" => $request->email,
+        //     "password" => $request->password
+        // ]);
+        // Auth::attempt([
+        //     "email" => $request->email,
+        //     "password" => $request->password
+        // ]);
 
-        Auth::attempt([
-            "email" => $request->email,
-            "password" => $request->password
-        ]);
 
-        Auth::user()->tokens()->delete();
-
-        $id = Auth::id();
-        $token = Auth::user()->createToken('token')->plainTextToken;
+        // $token = Auth::user()->createToken('token')->plainTextToken;
 
         return \response()->json([
-            "token" => $token,
+            "user_id" => $user->id,
         ]);
     }
-    public function logout(){
+    public function logout()
+    {
         auth()->user()->tokens()->delete();
 
 

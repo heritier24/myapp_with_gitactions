@@ -25,6 +25,8 @@ class CandidatesController extends Controller
     {
         $validation = Validator::make($request->all(), [
             "candidate_userid" => "required",
+            "candidate_names" => "required",
+            "candidate_email" => "required",
             "phonenumber" => "required",
             "nationalid" => "required",
             "cv" => "required"
@@ -39,6 +41,8 @@ class CandidatesController extends Controller
         // }
         candidates::create([
             'candidate_userid' => $request->candidate_userid,
+            'candidate_names' => $request->candidate_names,
+            'candidate_email' => $request->candidate_email,
             'candidate_phonenumber' => $request->phonenumber,
             "nationalid" => $request->nationalid,
             "cv" => $request->cv
@@ -53,6 +57,7 @@ class CandidatesController extends Controller
     {
         $validation = Validator::make($request->all(), [
             "candidate_names" => "required",
+            "candidate_email" => "required",
             "phonenumber" => "required",
             "email" => "required",
             "nationalid" => "required",
@@ -63,8 +68,8 @@ class CandidatesController extends Controller
         }
         candidates::where('id', $id)->update([
             'candidate_names' => $request->candidate_names,
+            'candidate_email' => $request->candidate_email,
             'phonenumber' => $request->phonenumber,
-            "email" => $request->email,
             "nationalid" => $request->nationalid,
             "cv" => $request->cv
         ]);

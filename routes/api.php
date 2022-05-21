@@ -38,8 +38,9 @@ Route::post('/publish-jobs', [PublishJobsController::class, 'store']);
 Route::post('/apply-jobs', [PublishJobsController::class, 'applyJobs']);
 // Route::get('/get-job/{id}', [PublishJobsController::class, 'getJobById']); Not done before
 // View applicants
-Route::post('/get-all-applicants',[PublishJobsController::class, 'applicantsByJob']);
-Route::post('/repply-applicants/{id}',[PublishJobsController::class, 'repplyApplicants']);
+Route::get('/get-all-applicantsByJobid/{jobid}',[PublishJobsController::class, 'applicantsByJob']);
+Route::put('/repply-applicants/{id}',[PublishJobsController::class, 'repplyApplicants']);
+Route::post('get-application-result', [ApplicantResultsController::class, 'getApplicationResults']);
 
 Route::post('/login-candidate', [candidateUsersController::class, 'login']);
 Route::post('/register-candidate', [candidateUsersController::class, 'registerCandidate']);
@@ -59,7 +60,6 @@ Route::put('/mark-job-expired/{id}',[ExamsController::class, 'markJobAsExpired']
 Route::post('/set-exam-period',[ExamsController::class,'setExamPeriod']);
 
 // Candididate results 
-Route:: post('get-application-result',[ApplicantResultsController::class,'getApplicationResults']);
 Route::post('/get-exam-to-do',[ApplicantResultsController::class, 'getExamTodo']);
 Route::post('do-exam/{id}',[ApplicantResultsController::class, 'doExam']);
 Route::post('/submit-answer',[ApplicantResultsController::class, 'submitExamResults']);

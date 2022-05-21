@@ -63,7 +63,7 @@ class PublishJobsController extends Controller
     {
         $validation = Validator::make($request->all(), [
             "candidateid" => "required",
-            "date_applied" => "required",
+            "jobid" => "required",
             // "status" => "required"
         ]);
 
@@ -72,8 +72,8 @@ class PublishJobsController extends Controller
         }
         applyjob::create([
             'candidateid' => $request->candidateid,
-            'jobid' => $request->jobsid,
-            'date_applied' => $request->date_applied,
+            'jobid' => $request->jobid,
+            'date_applied' => date('Y-m-d'),
             // "status" => $request->status
         ]);
 
@@ -92,21 +92,17 @@ class PublishJobsController extends Controller
     }
 
     // Get applicants based on job applied for 
-    public function applicantsByJob(Request $request)
+    public function applicantsByJob($jobid)
     {
-        $validator = Validator::make($request->all(), [
-            'job_id' => 'required'
-        ]);
-        if ($validator->fails()) {
-            return response()->json(["errors" => $validator->errors()->all()], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
 
         $get_applicants = DB::table('applyjobs')
             ->join('jobs', 'jobs.id', 'applyjobs.jobid')
             ->join('candidates', 'candidates.id', 'applyjobs.candidateid')
             ->join('candidateusers', 'candidateusers.id', 'candidates.candidate_userid')
-            ->select('applyjobs.id', 'applyjobs.status', 'candidateusers.name', 'candidateusers.email', 'candidates.candidate_phonenumber', 'candidates.nationalid', 'jobs.job_title', 'jobs.job_type', 'jobs.company_name')
-            ->where('jobs.id', $request->job_id)
+            ->select('applyjobs.id', 'applyjobs.status', 'candidates.candidate_names',
+             'candidates.candidate_email', 'candidates.candidate_phonenumber', 
+             'candidates.nationalid', 'jobs.job_title', 'jobs.job_type', 'jobs.company_name')
+            ->where('jobs.id', $jobid)
             ->where('applyjobs.status', 'Pending')
             ->get();
 
@@ -131,9 +127,8 @@ class PublishJobsController extends Controller
         ]);
         if($update_to_repply){
             return response()->json([
-                'status'=>201,
                 'result'=>"Response successfully sent to applicant"
-            ]);
+            ], 201);
         }
     }
 }

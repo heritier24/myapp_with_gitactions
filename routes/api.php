@@ -39,7 +39,7 @@ Route::post('/apply-jobs', [PublishJobsController::class, 'applyJobs']);
 // Route::get('/get-job/{id}', [PublishJobsController::class, 'getJobById']); Not done before
 // View applicants
 Route::get('/get-all-applicantsByJobid/{jobid}',[PublishJobsController::class, 'applicantsByJob']);
-Route::put('/repply-applicants/{id}',[PublishJobsController::class, 'repplyApplicants']);
+Route::put('/repply-applicants',[PublishJobsController::class, 'repplyApplicants']);
 Route::post('get-application-result', [ApplicantResultsController::class, 'getApplicationResults']);
 
 Route::post('/login-candidate', [candidateUsersController::class, 'login']);

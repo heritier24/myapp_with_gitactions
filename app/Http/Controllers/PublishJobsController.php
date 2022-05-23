@@ -63,16 +63,30 @@ class PublishJobsController extends Controller
     {
         $validation = Validator::make($request->all(), [
             "candidateid" => "required",
-            "jobid" => "required",
+            "jobsid" => "required",
             // "status" => "required"
         ]);
 
         if ($validation->fails()) {
             return response()->json(["errors" => $validation->errors()->all()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+        // Check if candidates already applied 
+        $check_candidate = DB::table('jobs')
+        ->join('applyjobs','applyjobs.jobid','jobs.id')
+        ->join('candidates', 'candidates.id', 'applyjobs.candidateid')
+        ->join('candidateusers', 'candidateusers.id', 'candidates.candidate_userid')
+        ->where('applyjobs.jobid',$request->jobsid)
+        ->where('candidateusers.id',$request->candidateid)
+        ->count();
+
+        if($check_candidate){
+            return response()->json([
+                'errors'=>"You have already applied for this job"
+            ], 500);
+        }
         applyjob::create([
             'candidateid' => $request->candidateid,
-            'jobid' => $request->jobid,
+            'jobid' => $request->jobsid,
             'date_applied' => date('Y-m-d'),
             // "status" => $request->status
         ]);
@@ -99,7 +113,7 @@ class PublishJobsController extends Controller
             ->join('jobs', 'jobs.id', 'applyjobs.jobid')
             ->join('candidates', 'candidates.id', 'applyjobs.candidateid')
             ->join('candidateusers', 'candidateusers.id', 'candidates.candidate_userid')
-            ->select('applyjobs.id', 'applyjobs.status', 'candidates.candidate_names',
+            ->select('applyjobs.id AS applyjobid', 'applyjobs.status', 'candidates.candidate_names',
              'candidates.candidate_email', 'candidates.candidate_phonenumber', 
              'candidates.nationalid', 'jobs.job_title', 'jobs.job_type', 'jobs.company_name')
             ->where('jobs.id', $jobid)
@@ -113,7 +127,7 @@ class PublishJobsController extends Controller
     }
 
     // Repply applicant 
-    public function repplyApplicants(Request $request, $application_id)
+    public function repplyApplicants(Request $request)
     {
         $validation = Validator::make($request->all(), [
             'response' => 'required'
@@ -122,7 +136,7 @@ class PublishJobsController extends Controller
             return response()->json(["Errors" => $validation->errors()->all()], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
-        $update_to_repply = applyjob::where('id', $application_id)->update([
+        $update_to_repply = applyjob::where('id', $request->idjob)->update([
             "status" => $request->response,
         ]);
         if($update_to_repply){

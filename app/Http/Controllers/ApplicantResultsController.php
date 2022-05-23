@@ -34,12 +34,13 @@ class ApplicantResultsController extends Controller
     // Get exam when shortlisted 
     public function getExamTodo(Request $request)
     {
+        
 
         $exams_on_list = DB::table('applyjobs')
             ->join('jobs', 'jobs.id', 'applyjobs.jobid')
             ->join('candidates', 'candidates.id', 'applyjobs.candidateid')
             ->join('candidateusers', 'candidateusers.id', 'candidates.candidate_userid')
-            ->select('applyjobs.id', 'applyjobs.status', 'candidateusers.name', 'candidateusers.email', 'candidates.candidate_phonenumber', 'candidates.nationalid', 'jobs.job_title', 'jobs.job_type', 'jobs.company_name')
+            ->select('jobs.id AS jobid', 'applyjobs.status', 'candidates.candidate_names', 'candidateusers.email', 'candidates.candidate_phonenumber', 'candidates.nationalid', 'jobs.job_title', 'jobs.job_type', 'jobs.company_name')
             ->where('applyjobs.candidateid', $request->user_id)
             ->where('applyjobs.status', 'Short listed')
             ->where('jobs.exam_status', 'On to dos list')
@@ -55,7 +56,8 @@ class ApplicantResultsController extends Controller
     {
         $doExam = DB::table('jobs')
             ->join('exams', 'exams.job_id', 'jobs.id')
-            ->join('ready_exams', 'ready_exams.job_id', 'jobs.id')
+            // ->join('ready_exams', 'ready_exams.job_id', 'jobs.id')
+            ->select('exams.id AS question_id','exams.*','jobs.*')
             ->where('jobs.id', $job_id)
             ->get();
 
@@ -85,7 +87,8 @@ class ApplicantResultsController extends Controller
         $submitted_answers = array([
             "question_id" => $request->question_id,
             "answer" => $request->answer
-        ]);
+        ],
+    );
         $candidate_id = $request->cand_id;
 
         // Get the questions with answers

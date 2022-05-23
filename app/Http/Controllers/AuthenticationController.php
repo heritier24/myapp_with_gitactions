@@ -30,7 +30,7 @@ class AuthenticationController extends Controller
             'password' => Hash::make($request->password),
             'email' => $request->email
         ]);
-        // $token = $user->createToken('token')->plainTextToken;
+           // $token = $user->createToken('token')->plainTextToken;
 
         return \response()->json([
             "user_id" => $user->id,
@@ -68,15 +68,6 @@ class AuthenticationController extends Controller
 
         return \response()->json([
             "user_id" => $user->id,
-        ]);
-    }
-    public function logout()
-    {
-        auth()->user()->tokens()->delete();
-
-
-        return response()->json([
-            'message' => 'Tokens Revoked'
         ], Response::HTTP_OK);
     }
 }

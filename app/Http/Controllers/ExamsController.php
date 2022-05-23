@@ -37,7 +37,6 @@ class ExamsController extends Controller
         if ($validation->fails()) {
             return response()->json([
                 "errors" => $validation->errors()->all(),
-                'jobid' => $request->job_id
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
